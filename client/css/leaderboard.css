@@ -1,0 +1,80 @@
+:root {
+  --primary-teal: #20373f;
+  --secondary-teal: #274c55;
+  --box-shadow-color: #29756f;
+  --form-background: ##f3f7ff;
+  --placeholder-color: #a0aec0;
+  --font-color: #fff;
+}
+
+.container_leaderboard {
+  margin: 10rem auto;
+  width: 80rem;
+  height: 50rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  border-radius: 1rem;
+  overflow: hidden;
+  position: fixed;
+  z-index: 200;
+  background-color: #fff;
+  inset: 0;
+  border: 1px solid #29756f;
+  -webkit-border-radius: 1rem;
+  -moz-border-radius: 1rem;
+  -ms-border-radius: 1rem;
+  -o-border-radius: 1rem;
+
+  & .leaderboard_header {
+    width: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #29756f;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 1.5rem 0;
+  }
+
+  & .leaderboard_ranking {
+    width: inherit;
+  }
+}
+
+.grid_3-cols {
+  display: grid;
+  width: inherit;
+  grid-template-columns: 1fr 3fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.leaderboard_ranking .col_names {
+  font-size: 1.8rem;
+  color: var(--box-shadow-color);
+  border-bottom: 1px solid var(--box-shadow-color);
+}
+
+.ranking_list .rank_row {
+  font-size: 1.6rem;
+  color: var(--box-shadow-color);
+  padding: 1rem 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.ranking_list .highlight_current_user {
+  background-color: var(--primary-teal);
+  color: var(--font-color);
+}

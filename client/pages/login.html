@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/login.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="section-login">
+        <div class="section-login--left">
+          <h2>CashVault</h2>
+          <h1>Welcome Back</h1>
+          <p>Login to your account</p>
+          <form class="login-form">
+            <div class="login-form--details">
+              <i class="fa-solid fa-envelope"></i>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="email"
+                placeholder=""
+                required
+              />
+              <label for="email">Email</label>
+            </div>
+            <div class="login-form--details">
+              <i class="fa-solid fa-key"></i>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                class="password"
+                placeholder=""
+                required
+              />
+              <label for="password">Password</label>
+            </div>
+            <button type="button" class="forgot_password">
+              Forgot password?
+            </button>
+            <button type="submit" class="login_btn">Login</button>
+          </form>
+          <div class="sign-up-redirect">
+            <p>Don't have an account?</p>
+            <a href="sign-up.html">Register</a>
+          </div>
+        </div>
+        <div class="section-login--right">
+          <img src="/assets/images/login.jpg" alt="" />
+        </div>
+      </div>
+      <div class="overlay hidden"></div>
+      <div class="forgot_password_section hidden">
+        <form class="forgot_password_form">
+          <label for="registerd_email">Enter your Registered Email:</label>
+          <input
+            type="email"
+            id="registerd_email"
+            class="forgot_password_email"
+          />
+          <button class="reset_password_btn">Reset Password</button>
+        </form>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script type="module" src="/js/login.js"></script>
+  </body>
+</html>
