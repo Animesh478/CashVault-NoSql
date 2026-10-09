@@ -1,13 +1,14 @@
-const { UserModel, sequelize } = require("../models/index");
+const { User } = require("../models/user.model");
 
 const addUser = async function ({ name, email, password, phoneNumber }) {
   try {
-    return await UserModel.create({
+    const user = await User.create({
       fullName: name,
       email,
       password,
       phoneNumber,
     });
+    return user.toJSON();
   } catch (error) {
     console.log(error);
     throw error;
@@ -16,11 +17,7 @@ const addUser = async function ({ name, email, password, phoneNumber }) {
 
 const getUserByEmail = async function (email) {
   try {
-    return await UserModel.findOne({
-      where: {
-        email,
-      },
-    });
+    return await User.findOne({ email: String(email).toLowerCase() });
   } catch (error) {
     console.log(error);
     throw error;
@@ -29,8 +26,7 @@ const getUserByEmail = async function (email) {
 
 const getUserData = async function (email) {
   try {
-    const user = await getUserByEmail(email);
-    return user;
+    return await getUserByEmail(email);
   } catch (error) {
     console.log(error);
     throw error;
@@ -39,23 +35,13 @@ const getUserData = async function (email) {
 
 const updateTotalExpenses = async function (expenseAmount, userId) {
   try {
-    const t = await sequelize.transaction();
-    // total expense = total expense + expenseAmount
-    await UserModel.increment(
-      {
-        totalExpenses: expenseAmount,
-      },
-      {
-        where: {
-          id: userId,
-        },
-        transaction: t,
-      },
+    // $inc is atomic on a single document, so no transaction is needed
+    await User.updateOne(
+      { _id: userId },
+      { $inc: { totalExpenses: Number(expenseAmount) } },
     );
-    await t.commit();
   } catch (error) {
     console.log(error);
-    await t.rollback();
     throw error;
   }
 };

@@ -14,7 +14,7 @@ const showLeaderboard = async function (req, res, next) {
       obj.full_name = obj.full_name.toUpperCase();
       return { rank, ...obj };
     });
-    console.log(rankedData);
+    // console.log(rankedData);
     return res
       .status(200)
       .json({ success: true, rankedData, userId: currentUser.id });

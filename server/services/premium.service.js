@@ -1,15 +1,16 @@
-const { UserModel, sequelize } = require("../models");
+const { UserModel } = require("../models/user.model");
 
 const getUserAndAggregateExpense = async function () {
   try {
-    const result = await UserModel.findAll({
-      attributes: ["id", "full_name", "totalExpenses"],
-      order: [[sequelize.literal("totalExpenses"), "DESC"]],
-      raw: true,
+    const users = await UserModel.find({}, "fullName totalExpenses").sort({
+      totalExpenses: -1,
     });
-    console.log(result);
 
-    return result;
+    return users.map((user) => ({
+      id: user.id,
+      full_name: user.fullName,
+      totalExpenses: user.totalExpenses,
+    }));
   } catch (error) {
     console.log(error);
     throw error;

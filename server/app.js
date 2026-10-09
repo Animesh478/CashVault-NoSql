@@ -11,6 +11,7 @@ const premiumRouter = require("./routes/premium.routes");
 const userRouter = require("./routes/user.routes");
 const morganMiddleware = require("./middlewares/morgan.middleware");
 const errorHandler = require("./middlewares/errorHandler");
+const connectDB = require("./config/db");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -40,6 +41,12 @@ app.use("/api/premium", premiumRouter);
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log("Server started");
-});
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("Server started");
+    });
+  })
+  .catch(() => {
+    process.exit(1);
+  });

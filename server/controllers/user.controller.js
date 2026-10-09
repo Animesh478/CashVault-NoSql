@@ -3,7 +3,7 @@ const logger = require("../utils/logger");
 
 const getCurrentUser = async function (req, res) {
   const user = req.user;
-  if (!req.user) {
+  if (!user) {
     return res.status(401).json({ message: "User not authorized" });
   }
   try {

@@ -4,7 +4,8 @@ const {
   createOrder,
   verifyPaymentStatus,
 } = require("../services/cashfree.service");
-const { OrderModel, UserModel } = require("../models/index");
+const { OrderModel } = require("../models/order.model");
+const { UserModel } = require("../models/user.model");
 const logger = require("../utils/logger");
 
 const generateOrderId = function () {
@@ -38,9 +39,8 @@ const processPayment = async function (req, res, next) {
     });
 
     // update Order table after the order is created
-    await order.update({
-      paymentSessionId: data.payment_session_id,
-    });
+    order.paymentSessionId = data.payment_session_id;
+    await order.save();
 
     return res.status(200).json({ result: data });
   } catch (error) {
@@ -71,11 +71,7 @@ const paymentStatus = async function (req, res, next) {
       return res.status(404).json({ message: "Payment not found" });
     }
 
-    const order = await OrderModel.findOne({
-      where: {
-        orderId: order_id,
-      },
-    });
+    const order = await OrderModel.findOne({ orderId: order_id });
 
     if (!order) {
       logger.warn("Order does not exist", {
@@ -88,40 +84,22 @@ const paymentStatus = async function (req, res, next) {
     const latestPayment = payments[0];
 
     if (latestPayment.payment_status === "SUCCESS") {
-      await OrderModel.update(
-        {
-          status: "SUCCESS",
-        },
-        {
-          where: {
-            orderId: order_id,
-          },
-        },
+      await OrderModel.updateOne(
+        { orderId: order_id },
+        { $set: { status: "SUCCESS" } },
       );
-      await UserModel.update(
-        {
-          isPremium: "true",
-        },
-        {
-          where: {
-            id: order.userId,
-          },
-        },
+      await UserModel.updateOne(
+        { _id: order.userId },
+        { $set: { isPremium: true } },
       );
       return res.redirect(
         `${process.env.FRONTEND_URL}/pages/paymentStatus.html?status=${latestPayment.payment_status}&order_id=${order_id}`,
       );
     }
     if (latestPayment.payment_status === "FAILED") {
-      await OrderModel.update(
-        {
-          status: "FAILED",
-        },
-        {
-          where: {
-            orderId: order_id,
-          },
-        },
+      await OrderModel.updateOne(
+        { orderId: order_id },
+        { $set: { status: "FAILED" } },
       );
       logger.warn("Payment failed", {
         userId: user?.id,
@@ -130,15 +108,9 @@ const paymentStatus = async function (req, res, next) {
     }
 
     // Pending payment status
-    await OrderModel.update(
-      {
-        status: "PENDING",
-      },
-      {
-        where: {
-          orderId: order_id,
-        },
-      },
+    await OrderModel.updateOne(
+      { orderId: order_id },
+      { $set: { status: "PENDING" } },
     );
 
     logger.info("Payment pending", {

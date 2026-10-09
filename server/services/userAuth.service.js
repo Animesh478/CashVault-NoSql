@@ -1,12 +1,14 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const {
   TransactionalEmailsApi,
   SendSmtpEmail,
   TransactionalEmailsApiApiKeys,
 } = require("@getbrevo/brevo");
 const { getUserByEmail } = require("./user.service");
-const { ForgotPasswordModel, UserModel } = require("../models");
+const { ForgotPasswordModel } = require("../models/forgotPassword.model");
+const { User } = require("../models/user.model");
 const { getRequestRecord } = require("./forgotPassword.service");
 
 const createHashPassword = async function (password) {
@@ -19,7 +21,7 @@ const verifyPassword = async function (user, password) {
     return result;
   } catch (error) {
     console.log(error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -45,14 +47,12 @@ const verifyJWT = function (token) {
 
 const sendPasswordResetEmail = async function (email) {
   try {
-    const userInstance = await getUserByEmail(email);
-    if (!userInstance) {
+    const user = await getUserByEmail(email);
+    if (!user) {
       return null;
     }
-    const user = userInstance.toJSON();
 
-    const entryInstance = await ForgotPasswordModel.create({ userId: user.id });
-    const entry = entryInstance.toJSON();
+    const entry = await ForgotPasswordModel.create({ userId: user._id });
 
     const resetLink = `${process.env.FRONTEND_URL}/pages/reset-password.html?id=${entry.id}`;
 
@@ -96,28 +96,21 @@ const updatePassword = async function (id, newPassword) {
   try {
     const hashedPassword = await createHashPassword(newPassword);
     const record = await getRequestRecord(id);
-    const userId = record.userId;
-    await UserModel.update(
-      {
-        password: hashedPassword,
-      },
-      {
-        where: {
-          id: userId,
-        },
-      },
+
+    if (!record) {
+      throw new Error("Reset record not found");
+    }
+
+    // const userId = record.userId;
+    await UserModel.updateOne(
+      { _id: record.userId },
+      { $set: { password: hashedPassword } },
     );
 
     // the same link can't be used again
-    await ForgotPasswordModel.update(
-      {
-        isActive: false,
-      },
-      {
-        where: {
-          id: record.id,
-        },
-      },
+    await ForgotPasswordModel.updateOne(
+      { _id: record._id },
+      { $set: { isActive: false } },
     );
   } catch (error) {
     console.log(error);

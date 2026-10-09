@@ -1,4 +1,3 @@
-// import { v4 as uuidv4 } from "uuid";
 const { v4: uuidv4 } = require("uuid");
 
 const { generateCategory } = require("../services/aiCategory.service");
@@ -18,8 +17,9 @@ const addExpense = async function (req, res, next) {
   const user = req.user;
 
   try {
-    await updateTotalExpenses(expenseAmount, user.id); //update the total expenses for a user
-    // //? determine the category using ai
+    //update the total expenses for a user
+    // await updateTotalExpenses(expenseAmount, user.id);
+    //? determine the category using ai
     let generatedCategory;
     if (category === "other") {
       generatedCategory = await generateCategory(description);
@@ -33,6 +33,8 @@ const addExpense = async function (req, res, next) {
       generatedCategory,
       user,
     );
+
+    await updateTotalExpenses(expenseAmount, user.id);
 
     return res.status(201).json({ message: "Expense added", newExpense });
   } catch (error) {
