@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; font-src 'self' data:; connect-src 'self' http://localhost:* ws://localhost:*;">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/sign-up.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/sign-up.css">
+    <title>Sign Up</title>
 </head>
 <body>
     <div class="container">
@@ -41,12 +42,12 @@
     </form>
             </div>
             <div class="section-form--img">
-                <img src="/assets/images/sign-up.png" alt="" >
+                <img src="../assets/images/sign-up.png" alt="" >
             </div>
         </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
-    <script type="module" src="/js/sign-up.js"></script>
+    <script type="module" src="../js/sign-up.js"></script>
 </body>
 </html>

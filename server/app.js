@@ -43,6 +43,7 @@ app.use(errorHandler);
 
 connectDB()
   .then(() => {
+    console.log("inside connectDB");
     app.listen(PORT, () => {
       console.log("Server started");
     });
